@@ -1,11 +1,11 @@
 #Image Info
-img_h = 160
+img_h = 128
 img_w = 64
 img_c = 3
 
 #Training Info
 batch_size = 64
-max_epoch = 500
+max_epoch = 2500
 
 #Loss & Model Info
 activation = 'leaky'

@@ -3,6 +3,7 @@ import importlib
 from argparse import ArgumentParser
 from os.path import splitext
 from os.path import basename
+from os.path import join
 import cv2
 import numpy as np
 
@@ -16,8 +17,9 @@ def GetDistance(tensor0, tensor1):
 if __name__ == '__main__':
   parser = ArgumentParser()
   parser.add_argument('--config', required=True, type=str)
-  parser.add_argument('--txt-query', required=True, type=str)
-  parser.add_argument('--txt-test', required=True, type=str)
+  parser.add_argument('--data_dir', required=True, type=str)
+  parser.add_argument('--txt_query', required=True, type=str)
+  parser.add_argument('--txt_test', required=True, type=str)
   args = parser.parse_args()
   config = splitext(basename(args.config))[0]
 
@@ -43,24 +45,27 @@ if __name__ == '__main__':
       discriptor_test.append(discriptor)
 
   for query in discriptor_query:
-    img = cv2.imread(query[0])
+    img = cv2.imread(join(args.data_dir, query[0]))
+    print(query[0])
     emb = network.inference(img)
     query[2] = emb
 
   for test in discriptor_test:
-    img = cv2.imread(test[0])
+    img = cv2.imread(join(args.data_dir, test[0]))
+    print(test[0])
     emb = network.inference(img)
-    print(emb)
     test[2] = emb
 
   acc_rank1 = 0
   for query in discriptor_query:
     distances = []
     for test in discriptor_test:
+      print(query[0], test[0])
       distances.append(GetDistance(query[2], test[2]))
-      index = np.argmax(distances)
-      if query[1] == discriptor_test[index][1]:
-        acc_rank1 += 1
+
+    index = np.argmax(distances)
+    if query[1] == discriptor_test[index][1]:
+      acc_rank1 += 1
 
   
   print('Rank-1 accuracy : ', acc_rank1 / len(discriptor_query))

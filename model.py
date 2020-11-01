@@ -13,7 +13,7 @@ class RMNet_model():
 
   def build(self, train):
     if train:
-      self.data_loader = Data_loader(self.cfg.txt_dataset, self.cfg.img_h, self.cfg.img_w, True)
+      self.data_loader = Data_loader(self.cfg.data_dir, self.cfg.txt_dataset, self.cfg.img_h, self.cfg.img_w, True)
       self.ds_size, num_class = self.data_loader.get_status()
       step_per_epoch = self.ds_size // self.cfg.batch_size
       
@@ -27,7 +27,7 @@ class RMNet_model():
       placeholder_dropout = tf.train.piecewise_constant(self.global_step, [100 * step_per_epoch, 200 * step_per_epoch, 300 * step_per_epoch, 400 * step_per_epoch],
                                       [0.9, 0.9, 0.9, 1., 1.])
       lr = tf.train.piecewise_constant(self.global_step, [100 * step_per_epoch, 200 * step_per_epoch, 300 * step_per_epoch, 400 * step_per_epoch],
-                                      [1e-3, 1e-4, 5e-4, 1e-4, 5e-5])
+                                      [1e-1, 1e-1, 1e-1, 5e-2, 1e-2])
 
       embedding_local, embedding_global, end_point = RMNet(pre_process, placeholder_is_train, placeholder_dropout, self.cfg.activation, num_class)
       logit_local = end_point['logit_local']
@@ -69,8 +69,9 @@ class RMNet_model():
 
     else:
       self.placeholder_image = tf.placeholder(tf.float32, [1, None, None, self.cfg.img_c], name='input')
-      pre_process = tf.image.resize_bilinear(self.placeholder_image, (self.cfg.img_h, self.cfg.img_w))
-      pre_process = (pre_process / 127.5) - 1
+      # pre_process = tf.image.resize_bilinear(self.placeholder_image, (self.cfg.img_h, self.cfg.img_w))
+      # pre_process = (pre_process / 127.5) - 1
+      pre_process = (self.placeholder_image / 127.5) - 1
       emb_local, emb_global, end_point = RMNet(pre_process, False, 1, self.cfg.activation)
       self.embedding = emb_global
       self.saver = tf.train.Saver()
@@ -89,7 +90,7 @@ class RMNet_model():
     while train_progress < 100:
         try:
             begin = time()
-            batch_image, batch_label = self.data_loader.batch(self.cfg.batch_size, cfg.param_erasing)
+            batch_image, batch_label = self.data_loader.batch(self.cfg.batch_size, self.cfg.param_erasing)
             feed_dict = {
                 self.placeholder_image : batch_image,
                 self.placeholder_label : batch_label

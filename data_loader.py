@@ -3,9 +3,10 @@ import numpy as np
 import cv2
 import random
 import math
+from os.path import join
 
 class Data_loader():
-    def __init__(self, txt_path, h, w, in_memory=False):
+    def __init__(self, data_dir, txt_path, h, w, in_memory=False):
         self.paths = {}
         labels = []
         self.img_w, self.img_h = w, h
@@ -20,10 +21,10 @@ class Data_loader():
                     self.paths[int(parse[1])] = []
 
                 if in_memory:
-                    img = cv2.resize(cv2.imread(parse[0]), (w, h))
+                    img = cv2.resize(cv2.imread(join(data_dir, parse[0])), (w, h))
                     self.paths[int(parse[1])].append(img)
                 else:
-                    self.paths[int(parse[1])].append(parse[0])
+                    self.paths[int(parse[1])].append(join(data_dir, parse[0]))
                 labels.append(int(parse[1]))
         
         self.identity = np.arange(np.amax(labels) + 1)
