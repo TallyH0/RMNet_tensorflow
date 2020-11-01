@@ -10,6 +10,6 @@ This is a tensorflow implementation of [Fast and Accurate Person Re-Identificati
 # Result
 
 # Train
-    python train.py --config configuration.py
+    python train.py --config configuration.py --data_dir <market1501 dataset dir>
 
 # Test
