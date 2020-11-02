@@ -15,7 +15,7 @@ def RMNet_block(x, c, is_train, dropout, activation, scope='RMNet_block', spatia
         net = ops.conv2d(net, c, 1, 1, norm=norm, activation=None, is_train=is_train, scope='conv3')
         net = tf.nn.dropout(net, dropout)
         
-        net = tf.nn.elu(spatial + net)
+        net = ops.activate(spatial + net, activation)
         return net
     
 def RMNet_backbone(x, n_c, is_train, dropout, activation, scope):
