@@ -5,10 +5,10 @@ img_c = 3
 
 #Training Info
 batch_size = 64
-max_epoch = 2500
+max_epoch = 500
 
 #Loss & Model Info
-activation = 'leaky'
+activation = 'elu'
 weight_decay = 0
 factor_center_loss = 1
 alpha_center_loss = 0.95
