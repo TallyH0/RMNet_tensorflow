@@ -31,43 +31,42 @@ if __name__ == '__main__':
 
   discriptor_query = []
   discriptor_test = []
+  query_matrix = []
+  test_matrix = []
 
   with open(args.txt_query) as f:
     for line in f:
       parse = line.strip().split('\t')
-      discriptor = [parse[0], int(parse[1]), 0]
+      discriptor = [parse[0], int(parse[1])]
       discriptor_query.append(discriptor)
 
   with open(args.txt_test) as f:
     for line in f:
       parse = line.strip().split('\t')
-      discriptor = [parse[0], int(parse[1]), 0]
+      discriptor = [parse[0], int(parse[1])]
       discriptor_test.append(discriptor)
 
   for query in discriptor_query:
     img = cv2.imread(join(args.data_dir, query[0]))
-    print(query[0])
     emb = network.inference(img)
-    query[2] = emb
+    query_matrix.append(emb)
 
   for test in discriptor_test:
     img = cv2.imread(join(args.data_dir, test[0]))
-    print(test[0])
     emb = network.inference(img)
-    test[2] = emb
+    test_matrix.append(emb)
+
+  query_matrix = np.array(query_matrix)
+  test_matrix = np.array(test_matrix)
+
+  score_matrix = np.matmul(query_matrix, test_matrix.transpose())
+  nearest_index = np.argmax(score_matrix, axis=1)
 
   acc_rank1 = 0
-  for query in discriptor_query:
-    distances = []
-    for test in discriptor_test:
-      print(query[0], test[0])
-      distances.append(GetDistance(query[2], test[2]))
-
-    index = np.argmax(distances)
-    if query[1] == discriptor_test[index][1]:
+  for i in range(len(nearest_index)):
+    if discriptor_query[i][1] == discriptor_test[nearest_index[i]][1]:
       acc_rank1 += 1
 
-  
   print('Rank-1 accuracy : ', acc_rank1 / len(discriptor_query))
 
   
