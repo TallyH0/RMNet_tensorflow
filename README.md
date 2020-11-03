@@ -9,7 +9,7 @@ This is a tensorflow implementation of [Fast and Accurate Person Re-Identificati
 you can download market1501 dataset [here](https://drive.google.com/file/d/1wb4UHGDSvI4kkGjsfuqYXiTerBttEYh-/view?usp=sharing)
 
 # Result
-you can download pre-trained model [here](https://drive.google.com/file/d/1vNRKIUmuOXqWaxSY2HjixmgYvTfifkxM/view?usp=sharing)
+you can download pre-trained model [here](https://drive.google.com/file/d/1vNRKIUmuOXqWaxSY2HjixmgYvTfifkxM/view?usp=sharing)    
 rank@1 accuracy : 91.02%
 
 # Train
