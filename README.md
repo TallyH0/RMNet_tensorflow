@@ -10,7 +10,7 @@ you can download market1501 dataset [here](https://drive.google.com/file/d/1wb4U
 
 # Result
 you can download pre-trained model [here](https://drive.google.com/file/d/1vNRKIUmuOXqWaxSY2HjixmgYvTfifkxM/view?usp=sharing)    
-rank@1 accuracy : 91.02%
+rank@1 accuracy : 91.24%
 
 # Train
     python train.py --config configuration.py --data_dir <market1501 dataset dir>
